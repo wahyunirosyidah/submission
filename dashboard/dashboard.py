@@ -1,10 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
+import seaborn as sns
 import streamlit as st
 import calendar
-import seaborn as sns
-
+sns.set(style='dark')
 
 #Fungsi Menghitung total penyewa
 def total_penyewa(df):
@@ -28,8 +27,8 @@ def mothly_avg(df):
     monthly_avg_rentals['month_num'] = range(1, 13)
     return monthly_avg_rentals
 
-day_df = pd.read_csv("dashboard/day.csv")
-hour_df = pd.read_csv("dashboard/hour.csv")
+day_df = pd.read_csv("day.csv")
+hour_df = pd.read_csv("hour.csv")
 
 total=total_penyewa(day_df)
 monthly_rentals = prepare_monthly_rentals(day_df)
@@ -37,6 +36,16 @@ monthly_avg_rentals = mothly_avg(day_df)
 
 #Pie Chart Persentase Jumlah Penyewa Berdasarkan Status Keanggotaan
 total_casual, total_registered = total
+st.subheader('Demografi Penyewa Berdasarkan Status Keanggotaan Tahun 2011 dan 2012')
+#Kolom Data
+col1, col2 = st.columns(2)
+with col1:
+    st.metric("Total Registered User", value=total_registered)
+
+with col2:
+    st.metric("Total Casual Users", value=total_casual)
+
+#Pie Chart
 colors = ['#F4D06F', '#73E2A7']
 explode = (0.1, 0)
 
@@ -54,6 +63,7 @@ plt.title('Persentase Demografi Penyewa (2011 dan 2012)')
 st.pyplot(fig)
 
 # Membuat line chart
+st.subheader('Total Penyewa Sepeda Per Bulan Tahun 2011 dan 2012')
 plt.figure(figsize=(10, 6))
 for year in monthly_rentals['year'].unique():
     year_data = monthly_rentals[monthly_rentals['year'] == year]
