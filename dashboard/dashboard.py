@@ -28,8 +28,8 @@ def mothly_avg(df):
     monthly_avg_rentals['month_num'] = range(1, 13)
     return monthly_avg_rentals
 
-day_df = pd.read_csv("day.csv")
-hour_df = pd.read_csv("hour.csv")
+day_df = pd.read_csv("dashboard/day.csv")
+hour_df = pd.read_csv("dashboard/hour.csv")
 
 total=total_penyewa(day_df)
 monthly_rentals = prepare_monthly_rentals(day_df)
