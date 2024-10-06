@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import calendar
 import seaborn as sns
-sns.set(style='dark')
+
 
 #Fungsi Menghitung total penyewa
 def total_penyewa(df):
