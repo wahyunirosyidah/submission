@@ -63,6 +63,13 @@ monthly_rentals = prepare_monthly_rentals(day_df)
 # monthly_avg_rentals = mothly_avg(day_df)
 weather_avg_rentals = monthly_avg_byweather(hour_df)
 
+with st.sidebar:
+    # Menambahkan logo perusahaan
+    st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
+    
+
+
+
 #Pie Chart Persentase Jumlah Penyewa Berdasarkan Status Keanggotaan
 total_casual, total_registered = total
 st.subheader('Bike Rentals Demographics by Membership Status (2011-2012)')
@@ -124,9 +131,6 @@ plt.tight_layout()
 st.pyplot(plt)
 
 #Tren
-st.subheader('Average Bike Rentals by Weather (2011-2012)')
-
-
 plt.figure(figsize=(17,8))
 sns.regplot(x='month_num', 
             y='cnt', 
@@ -148,5 +152,56 @@ plt.bar(weather_avg_rentals['weather_desc'],
         color='blue')
 plt.xlabel('Kondisi Cuaca', fontsize=16,labelpad=15)
 plt.ylabel('Rata-Rata Jumlah Penyewa', fontsize=16,labelpad=15)
-plt.show()
 st.pyplot(plt)
+
+def prepare_monthly_rentals_with_weather(df):
+    # Konversi kolom 'dteday' ke tipe datetime
+    df['dteday'] = pd.to_datetime(df['dteday'])
+    
+    # Ekstrak tahun dan bulan dari 'dteday'
+    df['year'] = df['dteday'].dt.year
+    df['month'] = df['dteday'].dt.month
+
+    # Kelompokkan data berdasarkan tahun dan bulan
+    monthly_rentals = df.groupby(['year', 'month']).agg({
+        'cnt': 'sum',               # Total penyewa
+        'weathersit': lambda x: x.mode()[0]  # Cuaca yang paling sering muncul
+    }).reset_index()
+
+    return monthly_rentals
+
+
+# Fungsi untuk mendapatkan cuaca paling sering dalam format nama
+def get_weather_name(weathersit_value):
+    weather_dict = {
+    1: 'Clear, Few clouds',
+    2: 'Mist + Cloudy',
+    3: 'Light Snow, Light Rain',
+    4: 'Heavy Rain, Ice Pallets'
+    }
+    return weather_dict.get(weathersit_value, "Tidak diketahui")
+
+
+
+# Mendapatkan data penyewaan dan cuaca paling sering per bulan
+monthly_rentals_with_weather = prepare_monthly_rentals_with_weather(day_df)
+
+# Menyiapkan data per tahun
+rentals_2011 = monthly_rentals_with_weather[monthly_rentals_with_weather['year'] == 2011]
+rentals_2012 = monthly_rentals_with_weather[monthly_rentals_with_weather['year'] == 2012]
+
+# Membuat tabel untuk tahun 2011
+st.subheader('Cuaca Tersering per Bulan (2011)')
+table_2011 = rentals_2011.copy()
+table_2011['month'] = table_2011['month'].apply(lambda x: calendar.month_name[x])
+table_2011['weathersit'] = table_2011['weathersit'].apply(get_weather_name)
+table_2011 = table_2011[['month', 'weathersit']]  # Hanya menampilkan kolom bulan dan cuaca tersering
+st.table(table_2011.rename(columns={"month": "Bulan", "weathersit": "Cuaca Tersering"}))
+
+# Membuat tabel untuk tahun 2012
+st.subheader('Cuaca Tersering per Bulan (2012)')
+table_2012 = rentals_2012.copy()
+table_2012['month'] = table_2012['month'].apply(lambda x: calendar.month_name[x])
+table_2012['weathersit'] = table_2012['weathersit'].apply(get_weather_name)
+table_2012 = table_2012[['month', 'weathersit']]  # Hanya menampilkan kolom bulan dan cuaca tersering
+st.table(table_2012.rename(columns={"month": "Bulan", "weathersit": "Cuaca Tersering"}))
