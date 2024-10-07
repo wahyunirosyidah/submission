@@ -75,31 +75,6 @@ with st.sidebar:
     st.metric("Total Bike Rentals", value=total_all)
     st.caption('Copyright © Wahyuni Fajrin Rosyidah 2024')
 
-st.subheader('Bike Rentals Demographics by Membership Status (2011-2012)')
-
-#Total Bike Rentals by Membership
-col1, col2 = st.columns(2)
-with col1:
-    st.metric("Total Registered Users", value=total_registered)
-
-with col2:
-    st.metric("Total Casual Users", value=total_casual)
-
-# Pie Chart
-colors = ['#F4D06F', '#73E2A7']
-explode = (0.1, 0)
-
-fig, ax = plt.subplots()
-ax.pie(
-    x=(total_registered, total_casual),
-    labels=('Registered', 'Casual'),
-    autopct='%1.1f%%',
-    colors=colors,
-    explode=explode,
-    startangle=90
-)
-ax.axis('equal')
-st.pyplot(fig)
 
 #Max Bike Rentals by Month
 st.subheader('Monthly Bike Rentals (2011-2012)')
@@ -148,7 +123,7 @@ plt.ylabel('Average Bike Rentals', fontsize=20, labelpad=15)
 st.pyplot(plt)
 
 # Bar Plot Average Rentals by Weather
-st.subheader('Average Bike Rentals by Weather (2011-2012)')
+st.subheader('Bike Rentals by Weather (2011-2012)')
 plt.figure(figsize=(12, 7))
 plt.bar(weather_avg_rentals['weather_desc'],
         weather_avg_rentals['cnt'],
@@ -158,7 +133,7 @@ plt.ylabel('Average Bike Rentals', fontsize=16, labelpad=15)
 st.pyplot(plt)
 
 
-st.subheader('Average Bike Rentals by Hour (2011-2012)')
+st.subheader('Hourly Bike Rentals (2011-2012)')
 plt.figure(figsize=(10, 6))
 plt.plot(hourly['hr'], 
          hourly['cnt'], 
