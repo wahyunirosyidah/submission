@@ -25,18 +25,47 @@ def mothly_avg(df):
     monthly_rentals = df.groupby(['year', 'month'])['cnt'].sum().reset_index()
     monthly_avg_rentals = monthly_rentals.groupby('month')['cnt'].mean().reset_index()
     monthly_avg_rentals['month_num'] = range(1, 13)
-    return monthly_avg_rentals
+    
+    day_df['year'] = day_df['dteday'].dt.year
+    year_2011 = monthly_rentals[monthly_rentals['year'] == 2011]
+    year_2012 = monthly_rentals[monthly_rentals['year'] == 2012]
+    
+    highest_2011 = monthly_rentals[monthly_rentals['year'] == 2011].loc[monthly_rentals[monthly_rentals['year'] == 2011]['cnt'].idxmax()]
+    highest_bymonth_2011 = calendar.month_name[int(highest_2011['month'])]
+    max_2011 = highest_2011['cnt']
+
+    highest_2012 = monthly_rentals[monthly_rentals['year'] == 2012].loc[monthly_rentals[monthly_rentals['year'] == 2012]['cnt'].idxmax()]
+    highest_bymonth_2012 = calendar.month_name[int(highest_2012['month'])]
+    max_2012 = highest_2012['cnt']
+
+    
+    return monthly_avg_rentals,highest_bymonth_2011,highest_bymonth_2012,max_2011,max_2012,year_2011,year_2012
+
+def monthly_avg_byweather(df):
+    weather_conditions = {
+    1: 'Clear, Few clouds',
+    2: 'Mist + Cloudy',
+    3: 'Light Snow, Light Rain',
+    4: 'Heavy Rain, Ice Pallets'
+    }
+    hour_df['weather_desc'] =df['weathersit'].map(weather_conditions)
+    weather_avg_rentals = df.groupby('weathersit')['cnt'].mean().reset_index()
+    weather_avg_rentals['weather_desc'] = weather_avg_rentals['weathersit'].map(weather_conditions)
+    return weather_avg_rentals
+
+
 
 day_df = pd.read_csv("day.csv")
 hour_df = pd.read_csv("hour.csv")
 
 total=total_penyewa(day_df)
 monthly_rentals = prepare_monthly_rentals(day_df)
-monthly_avg_rentals = mothly_avg(day_df)
+# monthly_avg_rentals = mothly_avg(day_df)
+weather_avg_rentals = monthly_avg_byweather(hour_df)
 
 #Pie Chart Persentase Jumlah Penyewa Berdasarkan Status Keanggotaan
 total_casual, total_registered = total
-st.subheader('Demografi Penyewa Berdasarkan Status Keanggotaan Tahun 2011 dan 2012')
+st.subheader('Bike Rentals Demographics by Membership Status (2011-2012)')
 #Kolom Data
 col1, col2 = st.columns(2)
 with col1:
@@ -59,12 +88,26 @@ ax.pie(
     startangle=90
 )
 ax.axis('equal') 
-plt.title('Persentase Demografi Penyewa (2011 dan 2012)')
 st.pyplot(fig)
 
 # Membuat line chart
-st.subheader('Total Penyewa Sepeda Per Bulan Tahun 2011 dan 2012')
-plt.figure(figsize=(10, 6))
+monthly_avg_rentals, highest_bymonth_2011, highest_bymonth_2012, max_2011, max_2012, year_2011,year_2012=mothly_avg(day_df)
+st.subheader('Monthly Bike Rentals (2011-2012)')
+col5,col6 = st.columns(2)
+col7, col8= st.columns(2)
+with col5:
+    st.metric("Max Rentals by Month(2011)", value=highest_bymonth_2011)
+
+with col6:
+    st.metric("Max Rental by Month(2012)", value=highest_bymonth_2012)
+
+with col7:
+    st.metric(f"Max Rentals {highest_bymonth_2011} (2011)", value=max_2011)
+
+with col8:
+    st.metric(f"Max Rentals {highest_bymonth_2012} (2012)", value=max_2012)    
+    
+plt.figure(figsize=(12, 7))
 for year in monthly_rentals['year'].unique():
     year_data = monthly_rentals[monthly_rentals['year'] == year]
     plt.plot(year_data['month'], 
@@ -74,19 +117,36 @@ for year in monthly_rentals['year'].unique():
         linewidth=2
         )
 
-plt.xticks(rotation=45)
-plt.title('Total Penyewa Sepeda per Bulan')
-plt.xlabel('Bulan')
-plt.ylabel('Total Penyewa')
+
+plt.ylabel('Total Penyewa', fontsize=20,labelpad=15)
 plt.legend()
 plt.tight_layout()
 st.pyplot(plt)
 
 #Tren
-plt.figure(figsize=(10, 6))
-sns.regplot(x='month_num', y='cnt', data=monthly_avg_rentals, marker='o', color='blue')
-plt.xticks(ticks=range(1, 13), labels=list(calendar.month_name[1:]), rotation=45)
-plt.title('Rata-Rata Jumlah Penyewa Sepeda per Bulan')
-plt.xlabel('Bulan')
-plt.ylabel('Nilai Rata-Rata Penyewa')
+st.subheader('Average Bike Rentals by Weather (2011-2012)')
+
+
+plt.figure(figsize=(17,8))
+sns.regplot(x='month_num', 
+            y='cnt', 
+            data=monthly_avg_rentals, 
+            marker='o', 
+            color='blue'
+            )
+plt.xticks(ticks=range(1, 13), labels=list(calendar.month_name[1:]),fontsize=16)
+plt.xlabel("")
+plt.ylabel('Jumlah Rata-Rata Penyewa', fontsize=20,labelpad=15)
 st.pyplot(plt) 
+
+
+#Bar Plot
+st.subheader('Average Bike Rentals by Weather (2011-2012)')
+plt.figure(figsize=(12, 7))
+plt.bar(weather_avg_rentals['weather_desc'], 
+        weather_avg_rentals['cnt'], 
+        color='blue')
+plt.xlabel('Kondisi Cuaca', fontsize=16,labelpad=15)
+plt.ylabel('Rata-Rata Jumlah Penyewa', fontsize=16,labelpad=15)
+plt.show()
+st.pyplot(plt)
