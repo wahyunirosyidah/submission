@@ -9,7 +9,8 @@ sns.set(style='dark')
 def rentals_bymembership(df):
     total_casual = df['casual'].sum()
     total_registered = df['registered'].sum()
-    return total_casual, total_registered
+    total_all = df['cnt'].sum()
+    return total_casual, total_registered,total_all
 
 #Data Bike Rentals per Bulannya
 def monthly_bike_rentals(df):
@@ -61,13 +62,16 @@ monthly_rentals, monthly_avg_rentals, highest_bymonth_2011, highest_bymonth_2012
 weather_avg_rentals = monthly_avg_byweather(hour_df)
 
 # Sidebar
+total_casual, total_registered, total_all = total
 with st.sidebar:
-    st.image("https://github.com/dicodingacademy/assets/raw/main/logo.png")
+    st.image("image.png")
+    st.title("Everywhere, We Gowes!")
+    st.metric("Total Bike Rentals", value=total_all)
+    st.caption('Copyright © Wahyuni Fajrin Rosyidah 2024')
 
 st.subheader('Bike Rentals Demographics by Membership Status (2011-2012)')
 
 #Total Bike Rentals by Membership
-total_casual, total_registered = total
 col1, col2 = st.columns(2)
 with col1:
     st.metric("Total Registered Users", value=total_registered)
