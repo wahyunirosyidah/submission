@@ -52,6 +52,11 @@ def monthly_avg_byweather(df):
     weather_avg_rentals['weather_desc'] = weather_avg_rentals['weathersit'].map(weather_conditions)
     return weather_avg_rentals
 
+def hourly_avg_rentals(df):
+    hourly_avg = df.groupby("hr")["cnt"].mean().reset_index()
+    return hourly_avg
+
+
 # Load Data
 day_df = pd.read_csv("day.csv")
 hour_df = pd.read_csv("hour.csv")
@@ -60,6 +65,7 @@ hour_df = pd.read_csv("hour.csv")
 total = rentals_bymembership(day_df)
 monthly_rentals, monthly_avg_rentals, highest_bymonth_2011, highest_bymonth_2012, max_2011, max_2012 = monthly_bike_rentals(day_df)
 weather_avg_rentals = monthly_avg_byweather(hour_df)
+hourly = hourly_avg_rentals(hour_df)
 
 # Sidebar
 total_casual, total_registered, total_all = total
@@ -121,9 +127,10 @@ for year in monthly_rentals['year'].unique():
              marker='o',
              linewidth=2
              )
+
+plt.xticks(rotation=45, fontsize=16)
 plt.ylabel('Bike Rentals', fontsize=20, labelpad=15)
 plt.legend()
-plt.tight_layout()
 st.pyplot(plt)
 
 # Regplot Average Bike Rentals by Month
@@ -135,7 +142,7 @@ sns.regplot(x='month_num',
             marker='o',
             color='blue'
             )
-plt.xticks(ticks=range(1, 13), labels=list(calendar.month_name[1:]), fontsize=16)
+plt.xticks(ticks=range(1, 13), labels=list(calendar.month_name[1:]), fontsize=16,rotation=45)
 plt.xlabel("")
 plt.ylabel('Average Bike Rentals', fontsize=20, labelpad=15)
 st.pyplot(plt)
@@ -149,3 +156,17 @@ plt.bar(weather_avg_rentals['weather_desc'],
 plt.xlabel('Weather', fontsize=16, labelpad=15)
 plt.ylabel('Average Bike Rentals', fontsize=16, labelpad=15)
 st.pyplot(plt)
+
+
+st.subheader('Average Bike Rentals by Hour (2011-2012)')
+plt.figure(figsize=(10, 6))
+plt.plot(hourly['hr'], 
+         hourly['cnt'], 
+         color='green')
+plt.xlabel('Hour', fontsize=12, labelpad=15)
+plt.ylabel('Average Bike Rentals', fontsize=12, labelpad=15)
+
+plt.xticks(range(0,24)) 
+
+st.pyplot(plt)
+
