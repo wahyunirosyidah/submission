@@ -65,7 +65,7 @@ weather_avg_rentals = monthly_avg_byweather(hour_df)
 hourly = hourly_avg_rentals(hour_df)
 
 # Sidebar
-total_casual, total_registered, total_all = total
+total_all = total
 with st.sidebar:
     st.image("image.png")
     st.title("Everywhere, We Gowes!")
