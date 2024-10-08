@@ -55,16 +55,14 @@ def hourly_avg_rentals(df):
 
 
 # Load Data
-day_df = pd.read_csv("day.csv")
-hour_df = pd.read_csv("hour.csv")
+day_df = pd.read_csv("dashboard/day.csv")
+hour_df = pd.read_csv("dashboard/hour.csv")
 
 # Pendefinisian Fungsi
 total = rentals_total(day_df)
 monthly_rentals, monthly_avg_rentals, highest_bymonth_2011, highest_bymonth_2012, max_2011, max_2012 = monthly_bike_rentals(day_df)
 weather_avg_rentals = monthly_avg_byweather(hour_df)
 hourly = hourly_avg_rentals(hour_df)
-
-
 
 st.header('Bike Rentals Dashboard :bike:')
 
