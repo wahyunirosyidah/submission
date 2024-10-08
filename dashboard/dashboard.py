@@ -67,7 +67,7 @@ hourly = hourly_avg_rentals(hour_df)
 # Sidebar
 total_all = total
 with st.sidebar:
-    st.image("image.png")
+    st.image("https://github.com/wahyunirosyidah/submission/blob/main/dashboard/image.png")
     st.title("Everywhere, We Gowes!")
     st.metric("Total Bike Rentals", value=total_all)
     st.caption('Copyright © Wahyuni Fajrin Rosyidah 2024')
