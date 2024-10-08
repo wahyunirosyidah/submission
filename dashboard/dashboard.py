@@ -5,12 +5,9 @@ import streamlit as st
 import calendar
 sns.set(style='dark')
 
-# Fungsi Menghitung Total Penyewa
-def rentals_bymembership(df):
-    total_casual = df['casual'].sum()
-    total_registered = df['registered'].sum()
+def rentals_total(df):
     total_all = df['cnt'].sum()
-    return total_casual, total_registered,total_all
+    return total_all
 
 #Data Bike Rentals per Bulannya
 def monthly_bike_rentals(df):
@@ -62,7 +59,7 @@ day_df = pd.read_csv("day.csv")
 hour_df = pd.read_csv("hour.csv")
 
 # Pendefinisian Fungsi
-total = rentals_bymembership(day_df)
+total = rentals_total(day_df)
 monthly_rentals, monthly_avg_rentals, highest_bymonth_2011, highest_bymonth_2012, max_2011, max_2012 = monthly_bike_rentals(day_df)
 weather_avg_rentals = monthly_avg_byweather(hour_df)
 hourly = hourly_avg_rentals(hour_df)
@@ -104,12 +101,12 @@ for year in monthly_rentals['year'].unique():
              )
 
 plt.xticks(rotation=45, fontsize=16)
-plt.ylabel('Bike Rentals', fontsize=20, labelpad=15)
+plt.ylabel('Bike Rentals (Unit)', fontsize=20, labelpad=15)
 plt.legend()
 st.pyplot(plt)
 
 # Regplot Average Bike Rentals by Month
-st.subheader('Average Bike Rentals by Weather (2011-2012)')
+st.subheader('Average Monthly Bike Rentals (2011-2012)')
 plt.figure(figsize=(17, 8))
 sns.regplot(x='month_num',
             y='cnt',
@@ -119,7 +116,7 @@ sns.regplot(x='month_num',
             )
 plt.xticks(ticks=range(1, 13), labels=list(calendar.month_name[1:]), fontsize=16,rotation=45)
 plt.xlabel("")
-plt.ylabel('Average Bike Rentals', fontsize=20, labelpad=15)
+plt.ylabel('Average Bike Rentals (Unit)', fontsize=20, labelpad=15)
 st.pyplot(plt)
 
 # Bar Plot Average Rentals by Weather
@@ -129,7 +126,7 @@ plt.bar(weather_avg_rentals['weather_desc'],
         weather_avg_rentals['cnt'],
         color='blue')
 plt.xlabel('Weather', fontsize=16, labelpad=15)
-plt.ylabel('Average Bike Rentals', fontsize=16, labelpad=15)
+plt.ylabel('Average Bike Rentals (Unit)', fontsize=16, labelpad=15)
 st.pyplot(plt)
 
 
@@ -139,7 +136,7 @@ plt.plot(hourly['hr'],
          hourly['cnt'], 
          color='green')
 plt.xlabel('Hour', fontsize=12, labelpad=15)
-plt.ylabel('Average Bike Rentals', fontsize=12, labelpad=15)
+plt.ylabel('Average Bike Rentals (Unit)', fontsize=12, labelpad=15)
 
 plt.xticks(range(0,24)) 
 
