@@ -55,14 +55,18 @@ def hourly_avg_rentals(df):
 
 
 # Load Data
-day_df = pd.read_csv("dashboard/day.csv")
-hour_df = pd.read_csv("dashboard/hour.csv")
+day_df = pd.read_csv("day.csv")
+hour_df = pd.read_csv("hour.csv")
 
 # Pendefinisian Fungsi
 total = rentals_total(day_df)
 monthly_rentals, monthly_avg_rentals, highest_bymonth_2011, highest_bymonth_2012, max_2011, max_2012 = monthly_bike_rentals(day_df)
 weather_avg_rentals = monthly_avg_byweather(hour_df)
 hourly = hourly_avg_rentals(hour_df)
+
+
+
+st.header('Bike Rentals Dashboard :bike:')
 
 # Sidebar
 total_all = total
@@ -75,18 +79,18 @@ with st.sidebar:
 
 #Max Bike Rentals by Month
 st.subheader('Monthly Bike Rentals (2011-2012)')
-col5, col6 = st.columns(2)
-col7, col8 = st.columns(2)
-with col5:
+col1, col2 = st.columns(2)
+col3, col4 = st.columns(2)
+with col1:
     st.metric("Max Rentals by Month (2011)", value=highest_bymonth_2011)
 
-with col6:
+with col2:
     st.metric("Max Rentals by Month (2012)", value=highest_bymonth_2012)
 
-with col7:
+with col3:
     st.metric(f"Max Rentals in {highest_bymonth_2011} (2011)", value=max_2011)
 
-with col8:
+with col4:
     st.metric(f"Max Rentals in {highest_bymonth_2012} (2012)", value=max_2012)
 
 # Line Chart Max Bike Rentals by Month
