@@ -55,8 +55,8 @@ def hourly_avg_rentals(df):
 
 
 # Load Data
-day_df = pd.read_csv("dashboard/day.csv")
-hour_df = pd.read_csv("dashboard/hour.csv")
+day_df = pd.read_csv("day.csv")
+hour_df = pd.read_csv("hour.csv")
 
 # Pendefinisian Fungsi
 total = rentals_total(day_df)
