@@ -1,4 +1,4 @@
-# Bike Rentals Dashboard 🚲
+# Bike Sharing Dashboard 🚲
 
 ## Run steamlit app
 ```
