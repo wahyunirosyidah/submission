@@ -56,7 +56,7 @@ def hourly_avg_rentals(df):
 
 # Load Data
 day_df = pd.read_csv("dashboard/day.csv")
-hour_df = pd.read_csv("dashboard/hour.csv")
+hour_df = pd.read_csv("dashborad/hour.csv")
 
 # Pendefinisian Fungsi
 total = rentals_total(day_df)
@@ -80,16 +80,16 @@ st.subheader('Monthly Bike Rentals (2011-2012)')
 col1, col2 = st.columns(2)
 col3, col4 = st.columns(2)
 with col1:
-    st.metric("Max Rentals by Month (2011)", value=highest_bymonth_2011)
+    st.metric("Max Rentals by Month (2011) :", value=highest_bymonth_2011)
 
 with col2:
-    st.metric("Max Rentals by Month (2012)", value=highest_bymonth_2012)
+    st.metric("Max Rentals by Month (2012) :", value=highest_bymonth_2012)
 
 with col3:
-    st.metric(f"Max Rentals in {highest_bymonth_2011} (2011)", value=max_2011)
+    st.metric(f"Max Rentals in {highest_bymonth_2011} (2011) :", value=max_2011)
 
 with col4:
-    st.metric(f"Max Rentals in {highest_bymonth_2012} (2012)", value=max_2012)
+    st.metric(f"Max Rentals in {highest_bymonth_2012} (2012) :", value=max_2012)
 
 # Line Chart Max Bike Rentals by Month
 plt.figure(figsize=(12, 7))
@@ -123,10 +123,11 @@ st.pyplot(plt)
 
 # Bar Plot Average Rentals by Weather
 st.subheader('Bike Rentals by Weather (2011-2012)')
+color=['#9C7658','#C8B5A6','#C8B5A6','#C8B5A6']
 plt.figure(figsize=(12, 7))
 plt.bar(weather_avg_rentals['weather_desc'],
         weather_avg_rentals['cnt'],
-        color='blue')
+        color=color)
 plt.xlabel('Weather', fontsize=16, labelpad=15)
 plt.ylabel('Average Bike Rentals (Unit)', fontsize=16, labelpad=15)
 st.pyplot(plt)
@@ -136,7 +137,7 @@ st.subheader('Hourly Bike Rentals (2011-2012)')
 plt.figure(figsize=(10, 6))
 plt.plot(hourly['hr'], 
          hourly['cnt'], 
-         color='green')
+         color='orange')
 plt.xlabel('Hour', fontsize=12, labelpad=15)
 plt.ylabel('Average Bike Rentals (Unit)', fontsize=12, labelpad=15)
 
